@@ -1,0 +1,1 @@
+CREATE TYPE product_type AS ENUM ('ecom', 'a2c', 'c2a', 'safeDeal');

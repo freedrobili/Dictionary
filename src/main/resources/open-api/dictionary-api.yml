@@ -1,0 +1,571 @@
+openapi: 3.0.3
+info:
+  title: Сервис eacq-mma-dictionary
+  version: 1.1.0
+  description: api для взаимодействия сервсиса dictionary.
+externalDocs:
+  url: 'https://wiki.tcsbank.ru/display/TPS/%5Beacq-mma-dictionary%5D+API'
+  description: Описание сервиса на wiki
+servers:
+  - url: 'https://…'
+    description: test
+  - url: 'https://…'
+    description: prod
+tags:
+  - name: internal categories
+    description: Внтуренние методы для работы с category-кодами
+  - name: admin's categories
+    description: Методы для работы с category-кодами в админке
+  - name: LK's categories
+    description: Методы для работы с category-кодами в ЛК
+paths:
+  /internal/api/v1/categories:
+    summary: Внутренние методы работы с МСС
+    description: Список кодов МС для внутреннего использования
+    get:
+      tags:
+        - internal categories
+      description: Получение списка кодов МСС
+      externalDocs:
+        url: 'https://wiki.tcsbank.ru/pages/viewpage.action?pageId=1252320851'
+        description: Описание на wiki
+      parameters:
+        - $ref: '#/components/parameters/code'
+        - $ref: '#/components/parameters/name'
+        - $ref: '#/components/parameters/viewToClients'
+        - $ref: '#/components/parameters/viewToManagers'
+        - $ref: '#/components/parameters/needsDocs'
+        - $ref: '#/components/parameters/product'
+        - $ref: '#/components/parameters/risky'
+      responses:
+        '200':
+          $ref: '#/components/responses/categoriesListResponse'
+        '400':
+          $ref: '#/components/responses/RequestErrorResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalErrorResponse'
+  /internal/api/v1/categories/{productName}:
+    summary: Внутренние методы работы с МСС
+    parameters:
+      - $ref: '#/components/parameters/productName'
+    description: Создание нового МСС
+    post:
+      tags:
+        - internal categories
+      externalDocs:
+        url: 'https://wiki.tcsbank.ru/pages/viewpage.action?pageId=1254823891'
+        description: Описание на wiki
+      requestBody:
+        $ref: '#/components/requestBodies/categoriesCreateRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/categoriesResponse'
+        '400':
+          $ref: '#/components/responses/RequestErrorResponse'
+        '409':
+          $ref: '#/components/responses/ConflictErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalErrorResponse'
+  /internal/api/v1/socialCategories/{categoryCode}:
+    summary: Внутренние методы работы с МСС
+    parameters:
+      - $ref: '#/components/parameters/categoryCode'
+    description: Метод возвращает данные о признаке социальности МСС и периоде его действия в случае положительного результата
+    get:
+      tags:
+        - internal categories
+      externalDocs:
+        url: 'https://wiki.tcsbank.ru/pages/viewpage.action?pageId=1517426071'
+        description: Описание на wiki
+      parameters:
+        - $ref: '#/components/parameters/categoryCode'
+      responses:
+        '200':
+          $ref: '#/components/responses/categoriesSocialPropertiesResponse'
+        '400':
+          $ref: '#/components/responses/RequestErrorResponse'
+        '409':
+          $ref: '#/components/responses/ConflictErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalErrorResponse'
+  /admin/api/v1/categories/{productName}:
+    summary: Методы работы с МСС в Админке
+    description: Список кодов МС для Админки
+    get:
+      tags:
+        - admin's categories
+      parameters:
+        - $ref: '#/components/parameters/productName'
+      responses:
+        '200':
+          $ref: '#/components/responses/categoriesShortListResponse'
+        '400':
+          $ref: '#/components/responses/RequestErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalErrorResponse'
+      security:
+        - oAuth:
+            - mma-dictionary-view|eacq-admin
+            - mma-dictionary-view-to-managers|eacq-admin
+  /api/v1/categories/{productName}:
+    summary: Методы работы с МСС в ЛК
+    description: Список кодов МС для ЛК
+    get:
+      tags:
+        - LK's categories
+      parameters:
+        - $ref: '#/components/parameters/productName'
+      responses:
+        '200':
+          $ref: '#/components/responses/categoriesShortListResponse'
+        '400':
+          $ref: '#/components/responses/RequestErrorResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedErrorResponse'
+        '403':
+          $ref: '#/components/responses/ForbiddenErrorResponse'
+        '404':
+          $ref: '#/components/responses/NotFoundErrorResponse'
+        '500':
+          $ref: '#/components/responses/InternalErrorResponse'
+      security:
+        - oAuth:
+            - mma-dictionary-view-to-clients|eacq-lk
+components:
+  securitySchemes:
+    oAuth:
+      type: apiKey
+      name: sessionID
+      description: Токен в хидере - только это приложение
+      in: header
+  schemas:
+    categoriesResponse:
+      type: object
+      description: Объект МСС
+      required:
+        - code
+        - name
+        - needsDocs
+        - viewToClients
+        - viewToManagers
+        - risky
+        - product
+      properties:
+        code:
+          type: string
+          pattern: '^[0-9]{4}$'
+          description: Код МСС
+        name:
+          type: string
+          description: Наименонование продуктовой категории
+          minLength: 1
+          maxLength: 255
+        needsDocs:
+          type: boolean
+          description: Флаг необходимости предоставления подтверждающих документов
+        needsDocsReason:
+          type: string
+          maxLength: 255
+          description: Дополнительное условие необходимости предоставления подтверждающих документов
+        needsDocsList:
+          type: string
+          maxLength: 255
+          description: Список подтверждающих документов
+        viewToClients:
+          type: boolean
+          description: Флаг видимости клиентам (в ЛК)
+        viewToManagers:
+          type: boolean
+          description: Флаг видимости менеджерам (в Админке)
+        product:
+          type: string
+          description: Принадлежность к продуктовой категории
+        risky:
+          type: boolean
+          description: Флаг рисковости
+    shortCategoriesResponse:
+      type: object
+      description: Объект МСС
+      required:
+        - code
+        - name
+        - needsDocs
+      properties:
+        code:
+          type: string
+          pattern: '^[0-9]{4}$'
+          description: Код МСС
+        name:
+          type: string
+          description: Наименонование продуктовой категории
+          minLength: 1
+          maxLength: 255
+        needsDocs:
+          type: boolean
+          description: Флаг необходимости предоставления подтверждающих документов
+        needsDocsReason:
+          type: string
+          maxLength: 255
+          description: Дополнительное условие необходимости предоставления подтверждающих документов
+        needsDocsList:
+          type: string
+          maxLength: 255
+          description: Список подтвержадющих документов
+    categories:
+      type: object
+      description: Список category
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/categoriesResponse'
+    shortCategories:
+      type: object
+      description: Сокращенный список category
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/shortCategoriesResponse'
+    categoriesSocialPropertiesResponse:
+      type: object
+      description: характеристики социальности МСС
+      required:
+        - socialFlag
+      properties:
+        socialFlag:
+          type: boolean
+          description: Флаг видимости социальности МСС
+        startDurationDate:
+          type: string
+          format: date
+          description: Начало действия социального периода
+        endDurationDate:
+          type: string
+          format: date
+          description: Окончание действия социального периода
+    categoriesCreateRequest:
+      type: object
+      description: Тело запроса на создание МСС
+      required:
+        - code
+        - name
+        - needsDocs
+        - viewToClients
+        - viewToManagers
+        - risky
+      properties:
+        code:
+          type: string
+          description: Код category
+          pattern: '^[0-9]{4}$'
+        name:
+          type: string
+          description: Наименование продуктовой категории
+          minimum: 1
+          maximum: 255
+        needsDocs:
+          type: boolean
+          description: Флаг необходимости предоставления дополнительных документов
+        needsDocsReason:
+          type: string
+          description: Причина необходимости предоставления дополнительных документов
+          maximum: 255
+        needsDocsList:
+          type: string
+          description: Список дополнительных документов
+          maximum: 255
+        viewToClients:
+          type: boolean
+          description: Флаг видимости клиентам (в ЛК)
+        viewToManagers:
+          type: boolean
+          description: Флаг видимости менеджерам (в Админке)
+        risky:
+          type: boolean
+          description: Флаг рисковости
+    Error:
+      type: object
+      required:
+        - id
+        - code
+        - message
+      properties:
+        id:
+          type: string
+          description: Уникальный UUID для логов и отладки
+        code:
+          type: string
+          description: Код ошибки текстом
+        message:
+          type: string
+          description: Описание ошибки для разработчиков
+        description:
+          type: string
+          description: Описание ошибки для пользователей
+    Error409:
+      type: object
+      required:
+        - id
+        - code
+        - message
+        - resourceId
+      properties:
+        id:
+          type: string
+          description: Уникальный UUID для логов и отладки
+        code:
+          type: string
+          description: Код ошибки текстом
+        message:
+          type: string
+          description: Описание ошибки для разработчиков
+        description:
+          type: string
+          description: Описание ошибки для пользователей
+        resourceId:
+          type: string
+          description: Идентификатор сущности
+  requestBodies:
+    categoriesCreateRequest:
+      description: Тело запроса создания МСС
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/categoriesCreateRequest'
+          examples:
+            simple:
+              $ref: '#/components/examples/categoriesCreateRequestExample'
+    paymentTypesCreateRequest:
+      description: Тело запроса получения ПС
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentTypesRequest'
+          examples:
+            simple:
+              $ref: '#/components/examples/PaymentTypesExampleRequest'
+  responses:
+    categoriesListResponse:
+      description: Список category
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/categories'
+          examples:
+            complex:
+              $ref: '#/components/examples/categoriesGetExample'
+    categoriesShortListResponse:
+      description: Сокращенный список category
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/shortCategories'
+          examples:
+            complex:
+              $ref: '#/components/examples/shortCategoriesGetExample'
+    categoriesResponse:
+      description: объект category с полным перечнем реквизитов
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/categoriesResponse'
+          examples:
+            complex:
+              $ref: '#/components/examples/categoriesCreateResponseExample'
+    categoriesSocialPropertiesResponse:
+      description: характеристики социальности МСС
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/categoriesSocialPropertiesResponse'
+          examples:
+            complex:
+              $ref: '#/components/examples/categoriesSocialPropertiesResponseExample'
+    PaymentTypes:
+      description: информация по платежным системам
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentTypesResponseDto'
+          examples:
+            complex:
+              $ref: '#/components/examples/PaymentTypesExample'
+    regionsListResponse:
+      description: Список регионов
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/regionsList'
+          examples:
+            complex:
+              $ref: '#/components/examples/regionsListExample'
+    filterTypeListResponse:
+      description: Список парметров filterType для графиков на странице Главная
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/filterType'
+          examples:
+            paymentsTypes:
+              $ref: '#/components/examples/filterTypeGetExamplePaymentsTypes'
+            paymentsErrors:
+              $ref: '#/components/examples/filterTypeGetExamplePaymentsErrors'
+    InternalErrorResponse:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            code500:
+              $ref: '#/components/examples/Error500Example'
+    UnauthorizedErrorResponse:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            code401:
+              $ref: '#/components/examples/Error401Example'
+    ForbiddenErrorResponse:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            code403:
+              $ref: '#/components/examples/Error403Example'
+    RequestErrorResponse:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            code400:
+              $ref: '#/components/examples/Error400Example'
+    NotFoundErrorResponse:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            company404:
+              $ref: '#/components/examples/Error404Example'
+    ConflictErrorResponse:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error409'
+          examples:
+            company404:
+              $ref: '#/components/examples/Error409Example'
+    countriesListResponse:
+      description: Список стран
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/countriesList'
+          examples:
+            complex:
+              $ref: '#/components/examples/countriesExample'
+  parameters:
+    code:
+      name: code
+      in: query
+      description: код МСС
+      required: false
+      schema:
+        type: string
+        pattern: '^[0-9]{4}$'
+    categoryCode:
+      name: categoryCode
+      in: path
+      description: код МСС
+      required: true
+      schema:
+        type: string
+        pattern: '^[0-9]{4}$'
+    name:
+      name: name
+      in: query
+      description: Наименование продуктовой категории
+      required: false
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 255
+    viewToClients:
+      name: viewToClients
+      in: query
+      description: Флаг видимости клиентам (в ЛК)
+      required: false
+      schema:
+        type: boolean
+    viewToManagers:
+      name: viewToManagers
+      in: query
+      description: Флаг видимости менеджерам (в ЛК)
+      required: false
+      schema:
+        type: boolean
+    needsDocs:
+      name: needsDocs
+      in: query
+      description: Флаг необходимости предоставления дополнительных документов
+      required: false
+      schema:
+        type: boolean
+    product:
+      name: product
+      in: query
+      description: Продукт, или список продуктов, по которым необходимы МСС
+      required: false
+      schema:
+        type: string
+        enum:
+          - ecom
+          - a2c
+          - c2a
+          - safeDeal
+    risky:
+      name: risky
+      in: query
+      description: Флаг рисковости МСС
+      required: false
+      schema:
+        type: boolean
+    productName:
+      name: productName
+      in: path
+      description: Продукт по которому необходимы МСС
+      required: true
+      schema:
+        type: string
+        enum:
+          - ecom
+          - a2c
+          - c2a
+          - safeDeal
+    blockName:
+      name: blockName
+      in: query
+      description: Название графика, для которого нужно получить параметры
+      required: true
+      schema:
+        type: string
+      example: 'paymentsTypes'
+

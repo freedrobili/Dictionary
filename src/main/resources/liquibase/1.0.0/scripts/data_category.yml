@@ -1,0 +1,159 @@
+databaseChangeLog:
+  - logicalFilePath: src/main/resources/liquibase/1.0.0/scripts/data_category
+  - changeSet:
+      id: 1.0.0_1
+      author: ykudashkina
+      changes:
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '1243'
+              - column:
+                  name: name
+                  value: 'Обувные магазины'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '2144'
+              - column:
+                  name: name
+                  value: 'Спортивные Клубы'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '2143'
+              - column:
+                  name: name
+                  value: 'Услуги заказа такси и лимузинов'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '6546'
+              - column:
+                  name: name
+                  value: 'Бакалейно-гастрономические магазины, супермаркеты. Мерчанты, реализующие полный ассортимент продуктов питания для домашнего употребления'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '4366'
+              - column:
+                  name: name
+                  value: 'Складское хранение общественного пользования'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '3413'
+              - column:
+                  name: name
+                  value: 'Фотостудия'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '9035'
+              - column:
+                  name: name
+                  value: 'Продажа и обслуживание бассейнов'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '4849'
+              - column:
+                  name: name
+                  value: 'Станция заправочная (с сопутствующими услугами или без них)'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '5535'
+              - column:
+                  name: name
+                  value: 'Оптовая продажа лекарств, БАД и иных товаров медицинского назначения, исключая медтехнику'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '9939'
+              - column:
+                  name: name
+                  value: 'Одежда для женщин'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '3542'
+              - column:
+                  name: name
+                  value: 'Аптеки'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '1432'
+              - column:
+                  name: name
+                  value: 'Материалы для шитья и рукоделия (ткани, выкроек, пряжи и другие материалы)'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '5499'
+              - column:
+                  name: name
+                  value: 'Ритуальнве услуги и крематории'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '8935'
+              - column:
+                  name: name
+                  value: 'Реемонт электроники'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '7783'
+              - column:
+                  name: name
+                  value: 'Учебные заведения: дистанционное обучение'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '3288'
+              - column:
+                  name: name
+                  value: 'Сдача в аренду оборудования, мебели, инструментов'
+        - insert:
+            tableName: category_tab
+            columns:
+              - column:
+                  name: code
+                  value: '7063'
+              - column:
+                  name: name
+                  value: 'Зоомагазины, товары для животных'

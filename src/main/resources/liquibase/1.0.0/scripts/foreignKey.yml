@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.2_0
+      author: ykudashkina
+      changes:
+        - sql:
+              dbms: postgresql
+              sql: |
+                  ALTER TABLE dictionary.product_category_tab
+                  ADD CONSTRAINT uq_category_code UNIQUE (category_code);
+        - addForeignKeyConstraint:
+              baseTableName: category_tab
+              baseColumnNames: code
+              constraintName: fk_category_product
+              referencedTableName: product_category_tab
+              referencedColumnNames: category_code
+              foreignKeyName: fk_category_product_code

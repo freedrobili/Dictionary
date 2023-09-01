@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - include:
+      file: "scripts/category_tab.yml"
+      relativeToChangelogFile: true
+  - include:
+      file: "scripts/data_category.yml"
+      relativeToChangelogFile: true
+  - include:
+      file: "scripts/product_category_tab.yml"
+      relativeToChangelogFile: true
+  - include:
+      file: "scripts/data_product_category.yml"
+      relativeToChangelogFile: true
+  - include:
+      file: "scripts/foreignKey.yml"
+      relativeToChangelogFile: true
+
+

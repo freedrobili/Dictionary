@@ -1,0 +1,74 @@
+databaseChangeLog:
+  - logicalFilePath: src/main/resources/liquibase/1.0.0/scripts/product_category_tab
+  - changeSet:
+      id: 1.0.1_0
+      author: ykudashkina
+      changes:
+        - createTable:
+            schemaName: dictionary
+            tableName: product_category_tab
+            remarks: Принадлежность категории к какому-то продукту
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+#                    foreignKeyName: fk_product_category_category_code
+#                    references: category_tab(code)
+                  name: category_code
+                  type: char(4)
+                  remarks: FK category code. Код категории.
+              - column:
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+#                    references: product_type
+                  name: product
+                  type: product_type
+#                  type: varchar(20)
+                  remarks: Продукт
+#                  enum:
+#                    name: product_type
+#                    values: "ecom", "a2c", "c2a", "safeD", "eal"
+              - column:
+                  constraints:
+                    nullable: false
+                  name: needs_docs
+                  type: boolean
+                  defaultValueBoolean: false
+                  remarks: Флаг необходимости предоставления подтверждающих документов
+              - column:
+                  name: needs_docs_reason
+                  type: varchar(255)
+                  remarks: Дополнительное условие необходимости прелоставления подтверждающих документов
+              - column:
+                  name: needs_docs_list
+                  type: varchar(255)
+                  remarks: Описание перечня подтверждающих документов
+              - column:
+                  constraints:
+                    nullable: false
+                  name: view_to_clients
+                  type: boolean
+                  defaultValueBoolean: false
+                  remarks: Флаг видимости клиентам (в ЛК)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: view_to_managers
+                  type: boolean
+                  defaultValueBoolean: false
+                  remarks: Флаг видимости менеджерам в Админке
+              - column:
+                  constraints:
+                    nullable: false
+                  name: risky
+                  type: boolean
+                  defaultValueBoolean: false
+                  remarks: Флаг видимости менеджерам в Админке
+#        - addForeignKeyConstraint:
+#            baseTableName: product_category_tab
+#            baseColumnNames: category_code
+#            constraintName: fk_product_category_category_code
+#            referencedTableName: category_tab
+#            referencedColumnNames: code
