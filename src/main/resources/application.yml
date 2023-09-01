@@ -1,12 +1,10 @@
-
-
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/postgres
+    jdbc-url: jdbc:postgresql://localhost:5432/postgres
     driver-class-name: org.postgresql.Driver
-    username: postgres # ??? ????????????
-    password: qwerty # ??? ??????
+    username: postgres
+    password: qwerty
     hikari:
       pool-name: HikariPool
       maximum-pool-size: 8
@@ -17,10 +15,9 @@ spring:
       validation-timeout: 2000
       leak-detection-threshold: 5000
       register-mbeans: false
-
-spring.liquibase:
-  url: jdbc:postgresql://localhost:5432/postgres
-  user: postgres # ??? ????????????
-  password: qwerty # ??? ??????
-  change-log: classpath:/liquibase/changelog.yml
-  default-schema: dictionary
+  liquibase:
+    url: jdbc:postgresql://localhost:5432/postgres
+    user: postgres
+    password: qwerty
+    change-log: classpath:/liquibase/changelog.yml
+    default-schema: dictionary

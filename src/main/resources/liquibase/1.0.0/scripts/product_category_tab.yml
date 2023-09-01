@@ -13,8 +13,6 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-#                    foreignKeyName: fk_product_category_category_code
-#                    references: category_tab(code)
                   name: category_code
                   type: char(4)
                   remarks: FK category code. Код категории.
@@ -22,14 +20,9 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-#                    references: product_type
                   name: product
-                  type: product_type
-#                  type: varchar(20)
+                  type: varchar(20)
                   remarks: Продукт
-#                  enum:
-#                    name: product_type
-#                    values: "ecom", "a2c", "c2a", "safeD", "eal"
               - column:
                   constraints:
                     nullable: false
@@ -66,9 +59,3 @@ databaseChangeLog:
                   type: boolean
                   defaultValueBoolean: false
                   remarks: Флаг видимости менеджерам в Админке
-#        - addForeignKeyConstraint:
-#            baseTableName: product_category_tab
-#            baseColumnNames: category_code
-#            constraintName: fk_product_category_category_code
-#            referencedTableName: category_tab
-#            referencedColumnNames: code
