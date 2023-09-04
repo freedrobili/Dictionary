@@ -11,14 +11,15 @@ import javax.persistence.*;
 @Entity
 public class Category {
     @Id
-    private int category_code;
+    @Column(name = "category_code")
+    private Integer categoryCode;
     @Column(name = "product")
     private String product;
-    @Column(name = "needsDocs")
-    private boolean needsDocs;
-    @Column(name = "needsDocsReason")
+    @Column(name = "needs_docs")
+    private Boolean needsDocs;
+    @Column(name = "needs_docs_reason")
     private String needsDocsReason;
-    @Column(name = "needsDocsList")
+    @Column(name = "needs_docs_list")
     private String needsDocsList;
 
     public Category() {

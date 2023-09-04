@@ -40,9 +40,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     private ShortCategoriesResponse buildToShortCategories(Category category){
         ShortCategoriesResponse response =new ShortCategoriesResponse();
-        response.setCode(String.valueOf(category.getCategory_code()));
+        response.setCode(String.valueOf(category.getCategoryCode()));
         response.setName(category.getProduct());
-        response.setNeedsDocs(category.isNeedsDocs());
+        response.setNeedsDocs(category.getNeedsDocs());
         response.setNeedsDocsReason(category.getNeedsDocsReason());
         response.setNeedsDocsList(category.getNeedsDocsList());
         return response;
