@@ -2,10 +2,12 @@ package com.example.Dictionary.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(name="product_category_tab", schema = "dictionary")
 @Entity
@@ -32,10 +34,5 @@ public class Category {
     private String needsDocsList;
     @Column(name = "risky")
     private Boolean risky;
-
-
-    public Category() {
-
-    }
 }
 
