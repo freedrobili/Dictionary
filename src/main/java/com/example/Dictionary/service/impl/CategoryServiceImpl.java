@@ -1,12 +1,14 @@
 package com.example.Dictionary.service.impl;
 
 import com.example.Dictionary.model.Category;
+import com.example.Dictionary.model.CategoryTab;
 import com.example.Dictionary.repository.CategoryRepository;
 import com.example.Dictionary.service.CategoryService;
 import com.example.Dictionary.specifications.CategorySpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.tinkoff.eacq.mma.dictionary.rest.model.Categories;
 import ru.tinkoff.eacq.mma.dictionary.rest.model.CategoriesResponse;
 import ru.tinkoff.eacq.mma.dictionary.rest.model.ShortCategories;
@@ -15,10 +17,13 @@ import ru.tinkoff.eacq.mma.dictionary.rest.model.ShortCategoriesResponse;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
+    @Autowired
+    private EntityManager entityManager;
     private final CategoryRepository categoryRepository;
 
     @Autowired
@@ -42,11 +47,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-
-    public Categories getCategories(String code, String name, Boolean viewToClients, Boolean viewToManagers, Boolean needsDocs, String product, Boolean risky) {
+    public Categories getCategories(@RequestParam(value = "code", required = false) String code, @RequestParam(value = "name", required = false) String name, @RequestParam(value = "viewToClients", required = false) Boolean viewToClients, @RequestParam(value = "viewToManagers", required = false) Boolean viewToManagers, @RequestParam(value = "needsDocs", required = false) Boolean needsDocs, @RequestParam(value = "product", required = false) String product, @RequestParam(value = "risky", required = false) Boolean risky) {
         Specification<Category> spec = buildSpecification(code, name, viewToClients, viewToManagers, needsDocs, product, risky);
 
         List<Category> categoryList = categoryRepository.findAll(spec);
+        if (Objects.isNull(categoryList) || categoryList.isEmpty()) {
+            return null;
+        }
         Categories categories = new Categories();
         List<CategoriesResponse> categoriesResponses = categoryList.stream()
                 .map(this::buildCategoriesResponse)
@@ -84,16 +91,37 @@ public class CategoryServiceImpl implements CategoryService {
     private Specification<Category> buildSpecification(String code, String name, Boolean viewToClients, Boolean viewToManagers, Boolean needsDocs, String product, Boolean risky) {
         Specification<Category> spec = Specification.where(null);
 
-        spec = spec.and(CategorySpecifications.isEqual("categpryCode", code))
-                .and(CategorySpecifications.isEqual("categoryTab.name", name))
-                .and(CategorySpecifications.isEqual("viewToClients", viewToClients))
-                .and(CategorySpecifications.isEqual("viewToManagers", viewToManagers))
-                .and(CategorySpecifications.isEqual("needsDocs", needsDocs))
-                .and(CategorySpecifications.isEqual("product", product))
-                .and(CategorySpecifications.isEqual("risky", risky));
+        if (Objects.nonNull(code)) {
+            spec = spec.and(CategorySpecifications.isEqual("categoryCode", code));
+        }
+
+        if (Objects.nonNull(name)) {
+            spec = spec.and(CategorySpecifications.isEqual("categoryTab.name", name));
+        }
+
+        if (Objects.nonNull(viewToClients)) {
+            spec = spec.and(CategorySpecifications.isEqual("viewToClients", viewToClients));
+        }
+
+        if (Objects.nonNull(viewToManagers)) {
+            spec = spec.and(CategorySpecifications.isEqual("viewToManagers", viewToManagers));
+        }
+
+        if (Objects.nonNull(needsDocs)) {
+            spec = spec.and(CategorySpecifications.isEqual("needsDocs", needsDocs));
+        }
+
+        if (Objects.nonNull(product)) {
+            spec = spec.and(CategorySpecifications.isEqual("product", product));
+        }
+
+        if (Objects.nonNull(risky)) {
+            spec = spec.and(CategorySpecifications.isEqual("risky", risky));
+        }
 
         return spec;
     }
+
 }
 
 
