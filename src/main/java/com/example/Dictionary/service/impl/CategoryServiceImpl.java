@@ -1,7 +1,6 @@
 package com.example.Dictionary.service.impl;
 
 import com.example.Dictionary.model.Category;
-import com.example.Dictionary.model.CategoryTab;
 import com.example.Dictionary.repository.CategoryRepository;
 import com.example.Dictionary.service.CategoryService;
 import com.example.Dictionary.specifications.CategorySpecifications;
@@ -52,7 +51,8 @@ public class CategoryServiceImpl implements CategoryService {
 
         List<Category> categoryList = categoryRepository.findAll(spec);
         if (Objects.isNull(categoryList) || categoryList.isEmpty()) {
-            return null;
+//            return null;
+            return new Categories(); // Возвращает пустой объект Categories
         }
         Categories categories = new Categories();
         List<CategoriesResponse> categoriesResponses = categoryList.stream()
