@@ -2,27 +2,37 @@ package com.example.Dictionary.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @Table(name="product_category_tab", schema = "dictionary")
 @Entity
 public class Category {
     @Id
-    private int category_code;
+    @Column(name = "category_code")
+    private String categoryCode;
+
+    @ManyToOne
+    @JoinColumn(name = "category_code", referencedColumnName = "code", insertable = false, updatable = false)
+    private CategoryTab categoryTab;
+
     @Column(name = "product")
     private String product;
-    @Column(name = "needsDocs")
-    private boolean needsDocs;
-    @Column(name = "needsDocsReason")
+    @Column(name = "view_to_clients")
+    private Boolean viewToClients;
+    @Column(name = "view_to_managers")
+    private Boolean viewToManagers;
+    @Column(name = "needs_docs")
+    private Boolean needsDocs;
+    @Column(name = "needs_docs_reason")
     private String needsDocsReason;
-    @Column(name = "needsDocsList")
+    @Column(name = "needs_docs_list")
     private String needsDocsList;
-
-    public Category() {
-
-    }
+    @Column(name = "risky")
+    private Boolean risky;
 }
 
